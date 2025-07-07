@@ -35,7 +35,7 @@ def plot_energy_prices(df):
         )
     )
 
-    # Update layout with fixed right-axis range and vertical legend to the right
+    # Update layout: legend far right with ample margin
     fig.update_layout(
         title_text="Daily Prices: WTI Crude Oil vs. Natural Gas (Henry Hub)",
         xaxis_title="Date",
@@ -60,12 +60,12 @@ def plot_energy_prices(df):
         legend=dict(
             title=dict(text="Commodity"),
             orientation="v",
-            x=1.02,
+            x=1.25,
             y=0.5,
             xanchor="left",
             yanchor="middle"
         ),
-        margin=dict(t=60, b=60, r=200)
+        margin=dict(t=60, b=60, r=300)
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -96,8 +96,10 @@ def get_stock_data_with_fundamentals(tickers):
     for ticker in tickers:
         stock = yf.Ticker(ticker)
         hist = stock.history(period="2d")
-        if len(hist) < 2: continue
-        today = hist['Close'].iloc[-1]; yesterday = hist['Close'].iloc[-2]
+        if len(hist) < 2:
+            continue
+        today = hist['Close'].iloc[-1]
+        yesterday = hist['Close'].iloc[-2]
         pct_change = ((today - yesterday) / yesterday) * 100
         val = scrape_valuation(ticker)
         rows.append({
@@ -106,17 +108,17 @@ def get_stock_data_with_fundamentals(tickers):
             'Share Price': f"${today:.2f}",
             'Daily % Change': f"{pct_change:.2f}%",
             'Vertical': company_info[ticker]['Vertical'],
-            'EV/EBITDA Multiple': val.get('EV/EBITDA','N/A'),
-            'EV/Revenue Multiple': val.get('EV/Revenue','N/A')
+            'EV/EBITDA Multiple': val.get('EV/EBITDA', 'N/A'),
+            'EV/Revenue Multiple': val.get('EV/Revenue', 'N/A')
         })
     return pd.DataFrame(rows)
 
 # --- 4. Sector KPI Table ---
 def get_sector_kpi_distribution():
     return pd.DataFrame([
-        {'Percentile':'25th Percentile','EV/EBITDA':'5.3x','P/E':'9.8x','FCF Yield':'5.9%','Net Debt/EBITDA':'1.2x'},
-        {'Percentile':'Median','EV/EBITDA':'6.7x','P/E':'11.4x','FCF Yield':'7.2%','Net Debt/EBITDA':'1.5x'},
-        {'Percentile':'75th Percentile','EV/EBITDA':'7.9x','P/E':'13.2x','FCF Yield':'8.8%','Net Debt/EBITDA':'2.0x'}
+        {'Percentile': '25th Percentile', 'EV/EBITDA': '5.3x', 'P/E': '9.8x', 'FCF Yield': '5.9%', 'Net Debt/EBITDA': '1.2x'},
+        {'Percentile': 'Median', 'EV/EBITDA': '6.7x', 'P/E': '11.4x', 'FCF Yield': '7.2%', 'Net Debt/EBITDA': '1.5x'},
+        {'Percentile': '75th Percentile', 'EV/EBITDA': '7.9x', 'P/E': '13.2x', 'FCF Yield': '8.8%', 'Net Debt/EBITDA': '2.0x'}
     ])
 
 # --- 5. News Feed ---
@@ -128,11 +130,11 @@ def get_energy_news():
     return [f"**[{item.title.text}]({item.link.text})**<br>*{item.pubDate.text}*" for item in items]
 
 # --- Main Execution ---
-tickers=['XOM','CVX','COP','WMB']
-energy_prices=get_energy_prices()
-stock_data=get_stock_data_with_fundamentals(tickers)
-sector_kpis=get_sector_kpi_distribution()
-news=get_energy_news()
+tickers = ['XOM', 'CVX', 'COP', 'WMB']
+energy_prices = get_energy_prices()
+stock_data = get_stock_data_with_fundamentals(tickers)
+sector_kpis = get_sector_kpi_distribution()
+news = get_energy_news()
 
 st.title("Energy Sector Dashboard")
 
@@ -146,4 +148,5 @@ st.markdown("## 📊 Valuation Multiples and Financial KPIs (Sector Averages)")
 st.markdown(sector_kpis.to_html(index=False, escape=False), unsafe_allow_html=True)
 
 st.markdown("## 📰 Latest Energy News")
-for article in news: st.markdown(article, unsafe_allow_html=True)
+for article in news:
+    st.markdown(article, unsafe_allow_html=True)
