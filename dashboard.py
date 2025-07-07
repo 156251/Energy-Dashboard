@@ -23,7 +23,7 @@ def plot_energy_prices(df):
         yaxis=dict(title="WTI Crude (USD)", titlefont=dict(color="blue"), tickprefix="$", tickformat=".2f"),
         yaxis2=dict(title="Natural Gas (USD)", titlefont=dict(color="green"), overlaying="y", side="right",
                     tickprefix="$", range=[3.0, 4.0]),
-        legend=dict(title="Commodity")
+        legend=dict(title=dict(text="Commodity"))
     )
     st.plotly_chart(fig)
 
