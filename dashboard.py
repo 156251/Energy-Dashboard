@@ -51,16 +51,16 @@ def plot_energy_prices(df):
             overlaying="y",
             side="right",
             tickprefix="$",
-            range=[3.2, 3.4]
+            range=[3.1, 3.6]
         ),
         legend=dict(
             title=dict(text="Commodity"),
-            x=1.02,
+            x=1.1,
             y=1,
             xanchor="left",
             yanchor="top"
         ),
-        margin=dict(r=150)
+        margin=dict(r=250)
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -115,9 +115,9 @@ def get_stock_data_with_fundamentals(tickers):
 # --- 4. Sector KPI Table ---
 def get_sector_kpi_distribution():
     return pd.DataFrame([
-        {' ': '**25th Percentile**', 'EV/EBITDA': '5.3x', 'P/E': '9.8x', 'FCF Yield': '5.9%', 'Net Debt/EBITDA': '1.2x'},
-        {' ': '**Median**', 'EV/EBITDA': '6.7x', 'P/E': '11.4x', 'FCF Yield': '7.2%', 'Net Debt/EBITDA': '1.5x'},
-        {' ': '**75th Percentile**', 'EV/EBITDA': '7.9x', 'P/E': '13.2x', 'FCF Yield': '8.8%', 'Net Debt/EBITDA': '2.0x'}
+        {' ': '25th Percentile', 'EV/EBITDA': '5.3x', 'P/E': '9.8x', 'FCF Yield': '5.9%', 'Net Debt/EBITDA': '1.2x'},
+        {' ': 'Median', 'EV/EBITDA': '6.7x', 'P/E': '11.4x', 'FCF Yield': '7.2%', 'Net Debt/EBITDA': '1.5x'},
+        {' ': '75th Percentile', 'EV/EBITDA': '7.9x', 'P/E': '13.2x', 'FCF Yield': '8.8%', 'Net Debt/EBITDA': '2.0x'}
     ])
 
 # --- 5. News Feed ---
