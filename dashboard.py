@@ -14,7 +14,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import plotly.graph_objects as go
-from IPython.display import display, Markdown
+import streamlit as st
 
 # --- 1. Get Crude Oil and Natural Gas Prices ---
 def get_energy_prices():
@@ -37,7 +37,7 @@ def plot_energy_prices(df):
                     tickprefix="$", range=[3.0, 4.0]),
         legend=dict(title="Commodity")
     )
-    fig.show()
+st.plotly_chart(fig)
 
 # --- 3. Stock Data with Multiples and Daily Change ---
 def get_stock_data_with_fundamentals(tickers):
@@ -132,15 +132,15 @@ sector_kpis = get_sector_kpi_distribution()
 news = get_energy_news()
 
 # --- 7. Display Dashboard ---
-display(Markdown("## 📈 Daily Prices: Oil and Gas"))
+st.markdown("## 📈 Daily Prices: Oil and Gas")
 plot_energy_prices(energy_prices)
 
-display(Markdown("## 🏢 Industry Leaders"))
+st.markdown("## 🏢 Industry Leaders")
 display(stock_data.style.hide(axis="index"))
 
-display(Markdown("## 📊 Valuation Multiples and Financial KPIs (Sector Averages)"))
+st.markdown("## 📊 Valuation Multiples and Financial KPIs (Sector Averages)")
 display(sector_kpis.style.hide(axis="index"))
 
-display(Markdown("## 📰 Latest Energy News"))
+st.markdown("## 📰 Latest Energy News")
 for article in news:
     display(Markdown(f"- {article}"))
