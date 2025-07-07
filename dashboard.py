@@ -36,25 +36,23 @@ def plot_energy_prices(df):
     )
 
     fig.update_layout(
-        title="Daily Prices: WTI Crude Oil vs. Natural Gas (Henry Hub)",
-        xaxis=dict(title="Date"),
+        title_text="Daily Prices: WTI Crude Oil vs. Natural Gas (Henry Hub)",
+        xaxis_title="Date",
         yaxis=dict(
-            title="WTI Crude (USD)",
-            titlefont=dict(color="blue"),
+            title_text="WTI Crude (USD)",
+            title_font_color="blue",
             tickprefix="$",
             tickformat=".2f"
         ),
         yaxis2=dict(
-            title="Natural Gas (USD)",
-            titlefont=dict(color="green"),
+            title_text="Natural Gas (USD)",
+            title_font_color="green",
             overlaying="y",
             side="right",
             tickprefix="$",
             range=[3.0, 4.0]
         ),
-        legend=dict(
-            title=dict(text="Commodity")
-        )
+        legend=dict(title=dict(text="Commodity"))
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -104,9 +102,7 @@ def get_stock_data_with_fundamentals(tickers):
             'EV/Revenue Multiple': valuation.get('EV/Revenue', 'N/A')
         })
 
-    df = pd.DataFrame(rows)
-    # Apply color styling in Streamlit directly if needed
-    return df
+    return pd.DataFrame(rows)
 
 # --- 4. Sector KPI Table ---
 def get_sector_kpi_distribution():
