@@ -34,7 +34,7 @@ def plot_energy_prices(df):
             mode="lines+markers"
         )
     )
-    # Update layout with precise grid spacing and legend placement
+    # Update layout with precise grid spacing and legend placement to the right
     fig.update_layout(
         title_text="Daily Prices: WTI Crude Oil vs. Natural Gas (Henry Hub)",
         xaxis_title="Date",
@@ -44,7 +44,7 @@ def plot_energy_prices(df):
             tickprefix="$",
             tickformat=".2f",
             tickmode="linear",
-            dtick=0.5,            # grid every $0.50
+            dtick=0.5,
             showgrid=True
         ),
         yaxis2=dict(
@@ -55,19 +55,19 @@ def plot_energy_prices(df):
             tickprefix="$",
             range=[3.1, 3.6],
             tickmode="linear",
-            dtick=0.1          # ticks at $0.10 increments
+            dtick=0.1
         ),
         legend=dict(
             title=dict(text="Commodity"),
-            orientation="h",
-            yanchor="bottom",
-            y=1.15,
-            xanchor="center",
-            x=0.5
+            orientation="v",
+            x=1.02,
+            y=0.5,
+            xanchor="left",
+            yanchor="middle"
         ),
-        margin=dict(t=60, b=60)
+        margin=dict(t=60, b=60, r=150)
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True)(fig, use_container_width=True)
 
 # --- 3. Stock Data with Multiples and Daily Change ---
 def get_stock_data_with_fundamentals(tickers):
