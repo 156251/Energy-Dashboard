@@ -35,6 +35,7 @@ def plot_energy_prices(df):
         )
     )
 
+    # Update layout with fixed right-axis range and repositioned legend
     fig.update_layout(
         title_text="Daily Prices: WTI Crude Oil vs. Natural Gas (Henry Hub)",
         xaxis_title="Date",
@@ -50,9 +51,16 @@ def plot_energy_prices(df):
             overlaying="y",
             side="right",
             tickprefix="$",
-            range=[3.0, 4.0]
+            range=[3.2, 3.4]
         ),
-        legend=dict(title=dict(text="Commodity"))
+        legend=dict(
+            title=dict(text="Commodity"),
+            x=1.02,
+            y=1,
+            xanchor="left",
+            yanchor="top"
+        ),
+        margin=dict(r=150)
     )
     st.plotly_chart(fig, use_container_width=True)
 
