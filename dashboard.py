@@ -34,7 +34,8 @@ def plot_energy_prices(df):
             mode="lines+markers"
         )
     )
-    # Update layout with precise grid spacing and legend placement to the right
+
+    # Update layout with fixed right-axis range and vertical legend to the right
     fig.update_layout(
         title_text="Daily Prices: WTI Crude Oil vs. Natural Gas (Henry Hub)",
         xaxis_title="Date",
@@ -44,8 +45,7 @@ def plot_energy_prices(df):
             tickprefix="$",
             tickformat=".2f",
             tickmode="linear",
-            dtick=0.5,
-            showgrid=True
+            dtick=0.5
         ),
         yaxis2=dict(
             title_text="Natural Gas (USD)",
@@ -65,9 +65,9 @@ def plot_energy_prices(df):
             xanchor="left",
             yanchor="middle"
         ),
-        margin=dict(t=60, b=60, r=150)
+        margin=dict(t=60, b=60, r=200)
     )
-    st.plotly_chart(fig, use_container_width=True)(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True)
 
 # --- 3. Stock Data with Multiples and Daily Change ---
 def get_stock_data_with_fundamentals(tickers):
@@ -87,8 +87,10 @@ def get_stock_data_with_fundamentals(tickers):
         for row in table.find_all("tr"):
             cols = row.find_all("td")
             for i, col in enumerate(cols):
-                if col.text == "EV/EBITDA": data["EV/EBITDA"] = cols[i+1].text + "x"
-                if col.text == "P/S": data["EV/Revenue"] = cols[i+1].text + "x"
+                if col.text == "EV/EBITDA":
+                    data["EV/EBITDA"] = cols[i+1].text + "x"
+                if col.text == "P/S":
+                    data["EV/Revenue"] = cols[i+1].text + "x"
         return data
     rows = []
     for ticker in tickers:
