@@ -14,6 +14,7 @@ def get_energy_prices():
 # --- 2. Dual-Axis Chart for Oil & Gas ---
 def plot_energy_prices(df):
     fig = go.Figure()
+    # WTI Crude on left axis
     fig.add_trace(
         go.Scatter(
             x=df.index,
@@ -23,6 +24,7 @@ def plot_energy_prices(df):
             mode="lines+markers"
         )
     )
+    # Natural Gas on right axis
     fig.add_trace(
         go.Scatter(
             x=df.index,
@@ -35,7 +37,7 @@ def plot_energy_prices(df):
 
     fig.update_layout(
         title="Daily Prices: WTI Crude Oil vs. Natural Gas (Henry Hub)",
-        xaxis_title="Date",
+        xaxis=dict(title="Date"),
         yaxis=dict(
             title="WTI Crude (USD)",
             titlefont=dict(color="blue"),
@@ -50,9 +52,10 @@ def plot_energy_prices(df):
             tickprefix="$",
             range=[3.0, 4.0]
         ),
-        legend_title_text="Commodity"
+        legend=dict(
+            title=dict(text="Commodity")
+        )
     )
-
     st.plotly_chart(fig, use_container_width=True)
 
 # --- 3. Stock Data with Multiples and Daily Change ---
@@ -80,7 +83,7 @@ def get_stock_data_with_fundamentals(tickers):
                     data["EV/Revenue"] = cols[i+1].text + "x"
         return data
 
-    data = []
+    rows = []
     for ticker in tickers:
         stock = yf.Ticker(ticker)
         hist = stock.history(period="2d")
@@ -88,20 +91,22 @@ def get_stock_data_with_fundamentals(tickers):
             continue
         today = hist['Close'].iloc[-1]
         yesterday = hist['Close'].iloc[-2]
-        change_pct = ((today - yesterday) / yesterday) * 100
-        val = scrape_valuation(ticker)
+        pct_change = ((today - yesterday) / yesterday) * 100
+        valuation = scrape_valuation(ticker)
 
-        data.append({
+        rows.append({
             'Company Name': company_info[ticker]['Name'],
             'Ticker': ticker,
             'Share Price': f"${today:.2f}",
-            'Daily % Change': f"{change_pct:.2f}%",
+            'Daily % Change': f"{pct_change:.2f}%",
             'Vertical': company_info[ticker]['Vertical'],
-            'EV/EBITDA Multiple': val.get('EV/EBITDA', 'N/A'),
-            'EV/Revenue Multiple': val.get('EV/Revenue', 'N/A')
+            'EV/EBITDA Multiple': valuation.get('EV/EBITDA', 'N/A'),
+            'EV/Revenue Multiple': valuation.get('EV/Revenue', 'N/A')
         })
 
-    return pd.DataFrame(data)
+    df = pd.DataFrame(rows)
+    # Apply color styling in Streamlit directly if needed
+    return df
 
 # --- 4. Sector KPI Table ---
 def get_sector_kpi_distribution():
@@ -117,16 +122,17 @@ def get_energy_news():
     xml = requests.get(url).content
     soup = BeautifulSoup(xml, 'xml')
     items = soup.find_all('item')[:5]
-    return [f"**[{i.title.text}]({i.link.text})**  \n*{i.pubDate.text}*" for i in items]
+    return [f"**[{item.title.text}]({item.link.text})**  \n*{item.pubDate.text}*" for item in items]
 
-# --- 6. Main ---
+# --- Main Execution ---
 tickers = ['XOM', 'CVX', 'COP', 'WMB']
 energy_prices = get_energy_prices()
 stock_data = get_stock_data_with_fundamentals(tickers)
 sector_kpis = get_sector_kpi_distribution()
 news = get_energy_news()
 
-# --- 7. Page Layout ---
+st.title("Energy Sector Dashboard")
+
 st.markdown("## 📈 Daily Prices: Oil and Gas")
 plot_energy_prices(energy_prices)
 
